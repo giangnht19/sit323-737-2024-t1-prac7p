@@ -1,33 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fashfrenzy-app
+  name: node-app
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app: fashfrenzy
+      app: node-app
   template:
     metadata:
       labels:
-        app: fashfrenzy
+        app: node-app
     spec:
       containers:
-      - name: fashfrenzy
-        image: giangnht19/fashfrenzy_backend:v1
+      - name: node-app
+        image: gcr.io/fashfrenzy/node-app:v2
         ports:
         - containerPort: 8080
-        env:
-        # Database configuration
-        - name: DB_TYPE
-          value: "mongodb"
-        - name: DB_NAME
-          value: "fashfrenzy"
-        - name: MONGODB_URI
-          valueFrom:
-            secretKeyRef:
-              name: mongodb-secret   # Kubernetes Secret containing the connection string
-              key: MONGODB_URI
 ---
 apiVersion: v1
 kind: Service
@@ -40,4 +28,4 @@ spec:
     - protocol: TCP
       port: 4000
       targetPort: 4000
-  type: ClusterIP
+  type: LoadBalancer
